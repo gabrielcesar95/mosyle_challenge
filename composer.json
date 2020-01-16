@@ -1,0 +1,31 @@
+{
+  "name": "gabrielcesar95/mosyle_challenge",
+  "description": "Aplicação de teste para vaga de programador PHP",
+  "minimum-stability": "stable",
+  "authors": [
+	{
+	  "name": "Gabriel Cesar Mello",
+	  "email": "95gabrielcesar@gmail.com",
+	  "homepage": "https://www.github.com/gabrielcesar95",
+	  "role": "Developer"
+	}
+  ],
+  "config": {
+	"vendor-dir": "vendor"
+  },
+  "autoload": {
+	"psr-4": {
+	  "Source\\": "source/"
+	},
+	"files": [
+	  "source/Boot/Config.php",
+	  "source/Boot/Helpers.php"
+	]
+  },
+  "require": {
+	"php": "^7.1",
+	"ext-pdo": "^7.1",
+	"coffeecode/paginator": "^1.0",
+	"coffeecode/router": "^1.0"
+  }
+}
