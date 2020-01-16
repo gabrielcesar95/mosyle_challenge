@@ -77,6 +77,55 @@ class Users extends Api
 	/**
 	 * @param array $data
 	 */
+	public function show(array $data): void
+	{
+		$auth = $this->auth();
+		if (!$auth) {
+			exit;
+		}
+
+		$data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
+
+		if(!$data['id']){
+			$this->call(
+				422,
+				"unprocessable_entity",
+				'O ID do usuário é obrigatório'
+			)->back();
+			return;
+		}
+
+		if(!filter_var($data['id'], FILTER_VALIDATE_INT)){
+			$this->call(
+				422,
+				"unprocessable_entity",
+				'O ID do usuário deve ser um número inteiro'
+			)->back();
+			return;
+		}
+
+		$user = (new User())->findById($data['id']);
+
+		if (!$user) {
+			$this->call(
+				404,
+				"not_found",
+				'Usuário não encontrado'
+			)->back();
+			return;
+		}
+
+		$user = $user->data();
+		unset($user->password, $user->token, $user->created_at, $user->updated_at);
+
+		$response["user"] = $user;
+
+		$this->back($response);
+	}
+
+	/**
+	 * @param array $data
+	 */
 	public function login(array $data): void
 	{
 		$auth = $this->authByEmail($data);

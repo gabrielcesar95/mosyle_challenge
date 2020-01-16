@@ -37,4 +37,16 @@ Headers: (nenhum header necessário)
 Em caso de sucesso são retornados os dados de id, name e email, token e drink_counter do usuário, sob o código de status 200 (OK).  
 em caso de falha pode ser retornado código 401 (Unauthorized) para dados de acesso incorretos.
 
+##### Consulta de Usuário
+
+###### Requisição
+URL: /users/xx (ID de usuário)  
+Método: GET  
+Campos:  
+Headers: **token**
+
+###### Retorno
+Em caso de sucesso são retornados os dados de id, name e email e drink_counter do usuário com o ID solicitado, sob o código de status 200 (OK).  
+em caso de falha pode ser retornado código 404 (Not Found) para usuários inexistentes ou código 422 (Unprocessable Entity) para IDs inválidos.
+
 [Collection no Postman](https://www.postman.com)
