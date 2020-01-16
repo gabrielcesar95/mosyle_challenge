@@ -73,4 +73,23 @@ class Users extends Api
 
 		$this->back($response);
 	}
+
+	/**
+	 * @param array $data
+	 */
+	public function login(array $data): void
+	{
+		$auth = $this->authByEmail($data);
+		if (!$auth) {
+			exit;
+		}
+
+		$user = $this->user->data();
+		unset($user->password, $user->created_at, $user->updated_at);
+
+		$response["user"] = $user;
+
+		$this->back($response);
+		return;
+	}
 }

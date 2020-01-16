@@ -16,13 +16,25 @@ Campos em **negrito** são obrigatórios
 ##### Cadastro de Usuário
 
 ###### Requisição
-URL: /Users  
+URL: /users  
 Método: POST  
 Campos: **name**, **email** e **password**
 Headers: (nenhum header necessário)
 
 ###### Retorno
 Em caso de sucesso é retornada mensagem de sucesso e os dados de id, name e email do usuário, sob o código de status 200 (OK).  
-em caso de falha pode ser retornado código 422 (Unprocessable Entity) para erros devalidação ou código 400 (Bad Request) para usuários já cadastrados 
+em caso de falha pode ser retornado código 422 (Unprocessable Entity) para erros de validação ou código 400 (Bad Request) para usuários já cadastrados.
+
+##### Login
+
+###### Requisição
+URL: /login  
+Método: POST  
+Campos: **email** e **password**
+Headers: (nenhum header necessário)
+
+###### Retorno
+Em caso de sucesso são retornados os dados de id, name e email, token e drink_counter do usuário, sob o código de status 200 (OK).  
+em caso de falha pode ser retornado código 401 (Unauthorized) para dados de acesso incorretos.
 
 [Collection no Postman](https://www.postman.com)

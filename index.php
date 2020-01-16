@@ -20,6 +20,9 @@ $route->namespace("Source\App");
 $route->group('/users');
 $route->post('/', 'Users:create');
 
+//login
+$route->group('/login');
+$route->post('/', 'Users:login');
 
 /**
  * ROUTE
