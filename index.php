@@ -16,6 +16,10 @@ use CoffeeCode\Router\Router;
 $route = new Router(url(), ":");
 $route->namespace("Source\App");
 
+//user
+$route->group('/users');
+$route->post('/', 'Users:create');
+
 
 /**
  * ROUTE
