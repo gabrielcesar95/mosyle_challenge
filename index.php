@@ -23,6 +23,7 @@ $route->get('/', 'Users:index');
 $route->get('/{id}', 'Users:show');
 $route->put('/{id}', 'Users:update');
 $route->delete('/{id}', 'Users:delete');
+$route->post('/{id}/drink', 'Drinks:drink');
 
 //login
 $route->group('/login');
