@@ -124,8 +124,6 @@ abstract class Model
 
 		$this->query = "SELECT {$columns} FROM {$this->entity}";
 
-		var_dump($this->query);die;
-
 		return $this;
 	}
 
