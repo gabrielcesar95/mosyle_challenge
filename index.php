@@ -21,6 +21,7 @@ $route->group('/users');
 $route->post('/', 'Users:create');
 $route->get('/', 'Users:index');
 $route->get('/{id}', 'Users:show');
+$route->put('/{id}', 'Users:update');
 
 //login
 $route->group('/login');

@@ -52,9 +52,9 @@ class Users extends Api
 			return;
 		}
 
-		$this->user->name = (!empty($data["name"]) ? $data["name"] : $this->user->name);
-		$this->user->email = (!empty($data["email"]) ? $data["email"] : $this->user->email);
-		$this->user->password = (!empty($data["password"]) ? passwd($data["password"]) : $this->user->password);
+		$this->user->name = $data["name"];
+		$this->user->email = $data["email"];
+		$this->user->password = $data["password"];
 		$this->user->token = uniqid();
 
 		if (!$this->user->save()) {
@@ -106,7 +106,7 @@ class Users extends Api
 
 		$data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
 
-		if(!$data['id']){
+		if (!$data['id']) {
 			$this->call(
 				422,
 				"unprocessable_entity",
@@ -115,7 +115,7 @@ class Users extends Api
 			return;
 		}
 
-		if(!filter_var($data['id'], FILTER_VALIDATE_INT)){
+		if (!filter_var($data['id'], FILTER_VALIDATE_INT)) {
 			$this->call(
 				422,
 				"unprocessable_entity",
@@ -141,6 +141,47 @@ class Users extends Api
 		$response["user"] = $user;
 
 		$this->back($response);
+	}
+
+	public function update(array $data): void
+	{
+		$auth = $this->auth();
+		if (!$auth) {
+			exit;
+		}
+
+		$data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
+
+		if($this->user->id != $data['id']){
+			$this->call(
+				403,
+				"forbidden",
+				'Não é permitido alterar outros usuários'
+			)->back();
+			return;
+		}
+
+		$this->user->name = (!empty($data["name"]) ? $data["name"] : $this->user->name);
+		$this->user->email = (!empty($data["email"]) ? $data["email"] : $this->user->email);
+		$this->user->password = (!empty($data["password"]) ? passwd($data["password"]) : $this->user->password);
+
+		if (!$this->user->save()) {
+			$this->call(
+				400,
+				"invalid_data",
+				$this->user->message()->getText()
+			)->back();
+			return;
+		}
+
+		$user = $this->user->data();
+		unset($user->password, $user->token, $user->created_at, $user->updated_at);
+
+		$response["message"] = 'Usuário alterado com sucesso.';
+		$response["user"] = $user;
+
+		$this->back($response);
+
 	}
 
 	public function index(array $data): void
