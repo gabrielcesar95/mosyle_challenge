@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Servidor:                     127.0.0.1
--- Versão do servidor:           10.3.15-MariaDB - mariadb.org binary distribution
+-- Versão do servidor:           10.4.8-MariaDB - mariadb.org binary distribution
 -- OS do Servidor:               Win64
--- HeidiSQL Versão:              9.5.0.5196
+-- HeidiSQL Versão:              10.3.0.5771
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -15,6 +15,19 @@
 -- Copiando estrutura do banco de dados para mosyle_challenge
 CREATE DATABASE IF NOT EXISTS `mosyle_challenge` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `mosyle_challenge`;
+
+-- Copiando estrutura para tabela mosyle_challenge.drinks
+CREATE TABLE IF NOT EXISTS `drinks` (
+	`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+	`user_id` bigint(20) unsigned NOT NULL,
+	`ml` int(11) NOT NULL DEFAULT 0,
+	`created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+	PRIMARY KEY (`id`),
+	KEY `FK_drinks_users` (`user_id`),
+	CONSTRAINT `FK_drinks_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+-- Exportação de dados foi desmarcado.
 
 -- Copiando estrutura para tabela mosyle_challenge.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -30,6 +43,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 -- Exportação de dados foi desmarcado.
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
