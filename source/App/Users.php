@@ -34,20 +34,11 @@ class Users extends Api
 			return;
 		}
 
-		if (!is_email($data['email'])) {
+		if($validate = $this->validateLoginData($data["email"], $data["password"])){
 			$this->call(
-				422,
-				"unprocessable_entity",
-				'O e-mail informado é inválido'
-			)->back();
-			return;
-		}
-
-		if (!is_passwd($data['password'])) {
-			$this->call(
-				422,
-				"unprocessable_entity",
-				"A senha informada é inválida. Senhas devem ter entre " . CONF_PASSWD_MIN_LEN . " e " . CONF_PASSWD_MAX_LEN . " caracteres"
+				$validate['code'],
+				$validate['type'],
+				$validate['message']
 			)->back();
 			return;
 		}
@@ -152,11 +143,20 @@ class Users extends Api
 
 		$data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
 
-		if($this->user->id != $data['id']){
+		if ($this->user->id != $data['id']) {
 			$this->call(
 				403,
 				"forbidden",
 				'Não é permitido alterar outros usuários'
+			)->back();
+			return;
+		}
+
+		if($validate = $this->validateLoginData($data["email"], $data["password"])){
+			$this->call(
+				$validate['code'],
+				$validate['type'],
+				$validate['message']
 			)->back();
 			return;
 		}
@@ -227,5 +227,26 @@ class Users extends Api
 
 		$this->back($response);
 		return;
+	}
+
+	private function validateLoginData($email, $password): ?array
+	{
+		if (!is_email($email)) {
+			return [
+				'code' => 422,
+				'type' => 'unprocessable_entity',
+				'message' => 'O e-mail informado é inválido'
+			];
+		}
+
+		if (!is_passwd($password)) {
+			return [
+				'code' => 422,
+				'type' => 'unprocessable_entity',
+				'message' => "A senha informada é inválida. Senhas devem ter entre " . CONF_PASSWD_MIN_LEN . " e " . CONF_PASSWD_MAX_LEN . " caracteres"
+			];
+		}
+
+		return null;
 	}
 }
