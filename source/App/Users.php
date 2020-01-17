@@ -190,6 +190,41 @@ class Users extends Api
 	/**
 	 * @param array $data
 	 */
+	public function delete(array $data): void
+	{
+		$auth = $this->auth();
+		if (!$auth) {
+			exit;
+		}
+
+		$data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
+
+		if ($this->user->id != $data['id']) {
+			$this->call(
+				403,
+				"forbidden",
+				'Não é permitido deletar outros usuários'
+			)->back();
+			return;
+		}
+
+		if (!$this->user->destroy()) {
+			$this->call(
+				400,
+				"invalid_data",
+				$this->user->message()->getText()
+			)->back();
+			return;
+		}
+
+		$response["message"] = 'Usuário deletado com sucesso.';
+
+		$this->back($response);
+	}
+
+	/**
+	 * @param array $data
+	 */
 	public function index(array $data): void
 	{
 		$auth = $this->auth();

@@ -65,12 +65,26 @@ em caso de falha pode ser retornado código 404 (Not Found) para usuários inexi
 
 ###### Requisição
 URL: /users/xx (ID de usuário)  
-Método: POST  
+Método: PUT  
 Campos: name, email e password  
 Headers: **token**
 
 ###### Retorno
 Em caso de sucesso é retornada mensagem de sucesso e os dados de id, name e email do usuário, sob o código de status 200 (OK).  
-em caso de falha pode ser retornado código 422 (Unprocessable Entity) para erros de validação.
+em caso de falha pode ser retornado código 422 (Unprocessable Entity) para erros de validação ou código 403 (Forbidden) para tentativa de deletar um usuário diferente.
+
+[Collection no Postman](https://www.postman.com)
+
+##### Exclusão de Usuário
+
+###### Requisição
+URL: /users/xx (ID de usuário)  
+Método: DELETE  
+Campos:  
+Headers: **token**
+
+###### Retorno
+Em caso de sucesso é retornada mensagem de sucesso, sob o código de status 200 (OK).  
+em caso de falha pode ser retornado código 403 (Forbidden) para tentativa de deletar um usuário diferente.
 
 [Collection no Postman](https://www.postman.com)
