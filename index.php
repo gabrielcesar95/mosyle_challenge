@@ -19,6 +19,7 @@ $route->namespace("Source\App");
 //user
 $route->group('/users');
 $route->post('/', 'Users:create');
+$route->get('/', 'Users:index');
 $route->get('/{id}', 'Users:show');
 
 //login

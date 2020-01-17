@@ -3,6 +3,7 @@
 namespace Source\App;
 
 use Source\Models\User;
+use Source\Support\Pager;
 
 class Users extends Api
 {
@@ -77,6 +78,25 @@ class Users extends Api
 	/**
 	 * @param array $data
 	 */
+	public function login(array $data): void
+	{
+		$auth = $this->authByEmail($data);
+		if (!$auth) {
+			exit;
+		}
+
+		$user = $this->user->data();
+		unset($user->password, $user->created_at, $user->updated_at);
+
+		$response["user"] = $user;
+
+		$this->back($response);
+		return;
+	}
+
+	/**
+	 * @param array $data
+	 */
 	public function show(array $data): void
 	{
 		$auth = $this->auth();
@@ -123,20 +143,46 @@ class Users extends Api
 		$this->back($response);
 	}
 
-	/**
-	 * @param array $data
-	 */
-	public function login(array $data): void
+	public function index(array $data): void
 	{
-		$auth = $this->authByEmail($data);
+		$auth = $this->auth();
 		if (!$auth) {
 			exit;
 		}
 
-		$user = $this->user->data();
-		unset($user->password, $user->created_at, $user->updated_at);
+		$where = "";
+		$params = "";
+		$values = $this->headers;
 
-		$response["user"] = $user;
+
+		//filtros
+		if (!empty($values["search"]) && $search = filter_var($values["search"], FILTER_SANITIZE_STRING)) {
+			$where .= "MATCH(name, email) AGAINST(:search IN BOOLEAN MODE)";
+			$params .= "&search=+{$search}*";
+		}
+
+		$users = (new User())->find($where, $params);
+
+		if (!$users->count()) {
+			$this->call(
+				404,
+				"not_found",
+				"Nenhum usuário encontrado"
+			)->back(["results" => 0]);
+			return;
+		}
+
+		$page = (!empty($values["page"]) ? $values["page"] : 1);
+		$pager = new Pager(url("/users/"));
+		$pager->pager($users->count(), 10, $page);
+
+		$response["results"] = $users->count();
+		$response["page"] = $pager->page();
+		$response["pages"] = $pager->pages();
+
+		foreach ($users->limit($pager->limit())->offset($pager->offset())->order("created_at ASC")->fetch(true) as $invoice) {
+			$response["users"][] = $invoice->data();
+		}
 
 		$this->back($response);
 		return;
