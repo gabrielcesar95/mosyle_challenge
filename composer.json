@@ -26,7 +26,6 @@
 	"php": "^7.1",
 	"ext-pdo": "^7.1",
 	"coffeecode/paginator": "^1.0",
-	"league/route": "^4.3",
-	"zendframework/zend-diactoros": "^2.2"
+	"coffeecode/router": "^1.0"
   }
 }

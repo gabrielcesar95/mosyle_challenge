@@ -10,8 +10,8 @@ define("CONF_DB_NAME", "mosyle_challenge");
 /**
  * PROJECT URLs
  */
-define("CONF_URL_DOMAIN", "localhost");
-define("CONF_URL_BASE", "/mosyle_challenge");
+define("CONF_URL_BASE", "https://www.example.com");
+define("CONF_URL_TEST", "https://www.localhost/mosyle_challenge");
 
 /**
  * DATES

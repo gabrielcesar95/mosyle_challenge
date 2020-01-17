@@ -1,29 +1,52 @@
 <?php
+ob_start();
 
 require __DIR__ . "/vendor/autoload.php";
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+/**
+ * BOOTSTRAP
+ */
 
+use CoffeeCode\Router\Router;
 
-$_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], (strlen(CONF_URL_BASE)));
+/**
+ * API ROUTES
+ * index
+ */
+$route = new Router(url(), ":");
+$route->namespace("Source\App");
 
-$request = Zend\Diactoros\ServerRequestFactory::fromGlobals(
-	$_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
-);
+//user
+$route->group('/users');
+$route->post('/', 'Users:create');
+$route->get('/', 'Users:index');
+$route->get('/{id}', 'Users:show');
+$route->put('/{id}', 'Users:update');
+$route->delete('/{id}', 'Users:delete');
+$route->post('/{id}/drink', 'Drinks:drink');
 
-$router = new League\Route\Router;
+//login
+$route->group('/login');
+$route->post('/', 'Users:login');
 
-// map a route
-$router->map('GET', '/', function (ServerRequestInterface $request) : ResponseInterface {
-	$response = new Zend\Diactoros\Response;
-	$response->getBody()->write('<h1>Hello, World!</h1>');
-	return $response;
-});
+/**
+ * ROUTE
+ */
+$route->dispatch();
 
-$response = $router->dispatch($request);
+/**
+ * ERROR REDIRECT
+ */
+if ($route->error()) {
+	header('Content-Type: application/json; charset=UTF-8');
+	http_response_code(404);
 
-var_dump($response);die;
+	echo json_encode([
+		"errors" => [
+			"type " => "endpoint_not_found",
+			"message" => "Não foi possível processar a requisição"
+		]
+	], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+}
 
-// send the response to the browser
-(new Zend\HttpHandlerRunner\Emitter\SapiEmitter)->emit($response);
+ob_end_flush();
