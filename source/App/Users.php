@@ -202,7 +202,7 @@ class Users extends Api
 			$params .= "&search=+{$search}*";
 		}
 
-		$users = (new User())->find($where, $params);
+		$users = (new User())->find($where, $params, 'id, name, email, created_at, updated_at');
 
 		if (!$users->count()) {
 			$this->call(
