@@ -134,6 +134,9 @@ class Users extends Api
 		$this->back($response);
 	}
 
+	/**
+	 * @param array $data
+	 */
 	public function update(array $data): void
 	{
 		$auth = $this->auth();
@@ -184,6 +187,9 @@ class Users extends Api
 
 	}
 
+	/**
+	 * @param array $data
+	 */
 	public function index(array $data): void
 	{
 		$auth = $this->auth();
@@ -229,6 +235,11 @@ class Users extends Api
 		return;
 	}
 
+	/**
+	 * @param $email
+	 * @param $password
+	 * @return array|null
+	 */
 	private function validateLoginData($email, $password): ?array
 	{
 		if (!is_email($email)) {

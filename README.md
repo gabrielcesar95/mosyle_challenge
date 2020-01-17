@@ -61,4 +61,16 @@ Headers: **token**, page, search
 Em caso de sucesso são retornados os campos results, page, pages, e o array users, com os dados de id, name e email, created_at, updated_at e drink_counter dos usuários que se encaixem no filtro ```search``` (caso utilizado), sob o código de status 200 (OK).  
 em caso de falha pode ser retornado código 404 (Not Found) para usuários inexistentes ou não encontrados.
 
+##### Edição de Usuário
+
+###### Requisição
+URL: /users/xx (ID de usuário)  
+Método: POST  
+Campos: name, email e password  
+Headers: **token**
+
+###### Retorno
+Em caso de sucesso é retornada mensagem de sucesso e os dados de id, name e email do usuário, sob o código de status 200 (OK).  
+em caso de falha pode ser retornado código 422 (Unprocessable Entity) para erros de validação.
+
 [Collection no Postman](https://www.postman.com)
