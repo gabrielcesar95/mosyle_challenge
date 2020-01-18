@@ -17,10 +17,7 @@ class Users extends Api
 		parent::__construct();
 	}
 
-	/**
-	 * @param array $data
-	 */
-	public function index(array $data): void
+	public function index(): void
 	{
 		$auth = $this->auth();
 		if (!$auth) {

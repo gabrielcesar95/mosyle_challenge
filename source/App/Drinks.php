@@ -175,7 +175,7 @@ class Drinks extends Api
 		}
 
 		$page = (!empty($values["page"]) ? $values["page"] : 1);
-		$pager = new Pager(url("/users/"));
+		$pager = new Pager(url("/users/{$user->id}/drinks"));
 		$pager->pager($drinks->count(), CONF_PAGER_RESULTS, $page);
 
 		$response["results"] = $drinks->count();
