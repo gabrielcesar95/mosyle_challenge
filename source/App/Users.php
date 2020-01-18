@@ -2,6 +2,7 @@
 
 namespace Source\App;
 
+use Source\Models\Drink;
 use Source\Models\User;
 use Source\Support\Pager;
 
@@ -34,7 +35,7 @@ class Users extends Api
 			return;
 		}
 
-		if($validate = $this->validateLoginData($data["email"], $data["password"])){
+		if ($validate = $this->validateLoginData($data["email"], $data["password"])) {
 			$this->call(
 				$validate['code'],
 				$validate['type'],
@@ -77,6 +78,7 @@ class Users extends Api
 		}
 
 		$user = $this->user->data();
+		$user->drink_counter = $this->getDrinkCounter($this->user);
 		unset($user->password, $user->created_at, $user->updated_at);
 
 		$response["user"] = $user;
@@ -127,6 +129,7 @@ class Users extends Api
 		}
 
 		$user = $user->data();
+		$user->drink_counter = $this->getDrinkCounter($this->user);
 		unset($user->password, $user->token, $user->created_at, $user->updated_at);
 
 		$response["user"] = $user;
@@ -155,7 +158,7 @@ class Users extends Api
 			return;
 		}
 
-		if($validate = $this->validateLoginData($data["email"], $data["password"])){
+		if ($validate = $this->validateLoginData($data["email"], $data["password"])) {
 			$this->call(
 				$validate['code'],
 				$validate['type'],
@@ -260,8 +263,11 @@ class Users extends Api
 		$response["page"] = $pager->page();
 		$response["pages"] = $pager->pages();
 
-		foreach ($users->limit($pager->limit())->offset($pager->offset())->order("created_at ASC")->fetch(true) as $invoice) {
-			$response["users"][] = $invoice->data();
+		foreach ($users->limit($pager->limit())->offset($pager->offset())->order("created_at ASC")->fetch(true) as $row) {
+			$user = $row->data();
+			$user->drink_counter = $this->getDrinkCounter($row);
+
+			$response["users"][] = $user;
 		}
 
 		$this->back($response);
@@ -292,5 +298,26 @@ class Users extends Api
 		}
 
 		return null;
+	}
+
+	/**
+	 * @param User $user
+	 * @return int
+	 */
+	public function getDrinkCounter(User $user): int
+	{
+		$userData = $user->data();
+
+		if ($userData) {
+			$drink_counter = (new Drink())->find('user_id = :user_id AND DATE(created_at) = DATE_FORMAT(NOW(), "%Y-%m-%d")', "user_id={$user->id}", 'SUM(ml) AS drink_counter');
+
+			if ($drink_counter->count()) {
+				return (int)$drink_counter->fetch()->drink_counter;
+			}
+
+			return 0;
+		}
+
+		return 0;
 	}
 }
