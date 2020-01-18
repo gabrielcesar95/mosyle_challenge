@@ -11,10 +11,7 @@
 	}
   ],
   "config": {
-	"vendor-dir": "vendor",
-	"github-oauth": {
-	  "github.com": "d0000eb77b51bebcd33043744310c5272bb737b8"
-	}
+	"vendor-dir": "vendor"
   },
   "autoload": {
 	"psr-4": {

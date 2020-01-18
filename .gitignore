@@ -1,5 +1,5 @@
 ### Composer ###
 composer.phar
-/vendor/
+#/vendor/
 ### PhpStorm ###
 /.idea/
