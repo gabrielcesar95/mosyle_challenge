@@ -24,6 +24,7 @@ $route->get('/{id}', 'Users:show');
 $route->put('/{id}', 'Users:update');
 $route->delete('/{id}', 'Users:delete');
 $route->post('/{id}/drink', 'Drinks:drink');
+$route->get('/{id}/drinks', 'Drinks:userHistory');
 
 //login
 $route->group('/login');
