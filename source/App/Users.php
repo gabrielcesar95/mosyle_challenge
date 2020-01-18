@@ -20,6 +20,75 @@ class Users extends Api
 	/**
 	 * @param array $data
 	 */
+	public function index(array $data): void
+	{
+		$auth = $this->auth();
+		if (!$auth) {
+			exit;
+		}
+
+		$where = "";
+		$params = "";
+		$values = $this->headers;
+
+		if (!empty($values["search"]) && $search = filter_var($values["search"], FILTER_SANITIZE_STRING)) {
+			$where .= "MATCH(name, email) AGAINST(:search IN BOOLEAN MODE)";
+			$params .= "&search=+{$search}*";
+		}
+
+		$users = (new User())->find($where, $params, 'id, name, email, created_at, updated_at');
+
+		if (!$users->count()) {
+			$this->call(
+				404,
+				"not_found",
+				"Nenhum usuário encontrado"
+			)->back(["results" => 0]);
+			return;
+		}
+
+		$page = (!empty($values["page"]) ? $values["page"] : 1);
+		$pager = new Pager(url("/users/"));
+		$pager->pager($users->count(), CONF_PAGER_RESULTS, $page);
+
+		$response["results"] = $users->count();
+		$response["page"] = $pager->page();
+		$response["pages"] = $pager->pages();
+
+		foreach ($users->limit($pager->limit())->offset($pager->offset())->order("created_at ASC")->fetch(true) as $row) {
+			$user = $row->data();
+			$user->drink_counter = $this->getDrinkCounter($row);
+
+			$response["users"][] = $user;
+		}
+
+		$this->back($response);
+		return;
+	}
+
+	/**
+	 * @param array $data
+	 */
+	public function login(array $data): void
+	{
+		$auth = $this->authByEmail($data);
+		if (!$auth) {
+			exit;
+		}
+
+		$user = $this->user->data();
+		$user->drink_counter = $this->getDrinkCounter($this->user);
+		unset($user->password, $user->created_at, $user->updated_at);
+
+		$response["user"] = $user;
+
+		$this->back($response);
+		return;
+	}
+
+	/**
+	 * @param array $data
+	 */
 	public function create(array $data): void
 	{
 		$data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
@@ -65,26 +134,6 @@ class Users extends Api
 		$response["user"] = $user;
 
 		$this->back($response);
-	}
-
-	/**
-	 * @param array $data
-	 */
-	public function login(array $data): void
-	{
-		$auth = $this->authByEmail($data);
-		if (!$auth) {
-			exit;
-		}
-
-		$user = $this->user->data();
-		$user->drink_counter = $this->getDrinkCounter($this->user);
-		unset($user->password, $user->created_at, $user->updated_at);
-
-		$response["user"] = $user;
-
-		$this->back($response);
-		return;
 	}
 
 	/**
@@ -223,55 +272,6 @@ class Users extends Api
 		$response["message"] = 'Usuário deletado com sucesso.';
 
 		$this->back($response);
-	}
-
-	/**
-	 * @param array $data
-	 */
-	public function index(array $data): void
-	{
-		$auth = $this->auth();
-		if (!$auth) {
-			exit;
-		}
-
-		$where = "";
-		$params = "";
-		$values = $this->headers;
-
-		if (!empty($values["search"]) && $search = filter_var($values["search"], FILTER_SANITIZE_STRING)) {
-			$where .= "MATCH(name, email) AGAINST(:search IN BOOLEAN MODE)";
-			$params .= "&search=+{$search}*";
-		}
-
-		$users = (new User())->find($where, $params, 'id, name, email, created_at, updated_at');
-
-		if (!$users->count()) {
-			$this->call(
-				404,
-				"not_found",
-				"Nenhum usuário encontrado"
-			)->back(["results" => 0]);
-			return;
-		}
-
-		$page = (!empty($values["page"]) ? $values["page"] : 1);
-		$pager = new Pager(url("/users/"));
-		$pager->pager($users->count(), CONF_PAGER_RESULTS, $page);
-
-		$response["results"] = $users->count();
-		$response["page"] = $pager->page();
-		$response["pages"] = $pager->pages();
-
-		foreach ($users->limit($pager->limit())->offset($pager->offset())->order("created_at ASC")->fetch(true) as $row) {
-			$user = $row->data();
-			$user->drink_counter = $this->getDrinkCounter($row);
-
-			$response["users"][] = $user;
-		}
-
-		$this->back($response);
-		return;
 	}
 
 	/**
