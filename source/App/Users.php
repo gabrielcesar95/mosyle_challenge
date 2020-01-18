@@ -236,8 +236,6 @@ class Users extends Api
 		$params = "";
 		$values = $this->headers;
 
-
-		//filtros
 		if (!empty($values["search"]) && $search = filter_var($values["search"], FILTER_SANITIZE_STRING)) {
 			$where .= "MATCH(name, email) AGAINST(:search IN BOOLEAN MODE)";
 			$params .= "&search=+{$search}*";
@@ -256,7 +254,7 @@ class Users extends Api
 
 		$page = (!empty($values["page"]) ? $values["page"] : 1);
 		$pager = new Pager(url("/users/"));
-		$pager->pager($users->count(), 10, $page);
+		$pager->pager($users->count(), CONF_PAGER_RESULTS, $page);
 
 		$response["results"] = $users->count();
 		$response["page"] = $pager->page();

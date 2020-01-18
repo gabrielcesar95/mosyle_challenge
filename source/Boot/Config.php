@@ -26,3 +26,8 @@ define("CONF_PASSWD_MIN_LEN", 8);
 define("CONF_PASSWD_MAX_LEN", 40);
 define("CONF_PASSWD_ALGO", PASSWORD_DEFAULT);
 define("CONF_PASSWD_OPTION", ["cost" => 10]);
+
+/**
+ * PAGER
+ */
+define("CONF_PAGER_RESULTS", 10);
