@@ -22,10 +22,16 @@
 	  "source/Boot/Helpers.php"
 	]
   },
+  "repositories": [
+	{
+	  "type": "vcs",
+	  "url": "https://github.com/gabrielcesar95/router.git"
+	}
+  ],
   "require": {
 	"php": "^7.1",
 	"ext-pdo": "^7.1",
 	"coffeecode/paginator": "^1.0",
-	"coffeecode/router": "^1.0"
+	"gabrielcesar95/router": "dev-master"
   }
 }
