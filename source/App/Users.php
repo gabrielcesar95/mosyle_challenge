@@ -110,7 +110,7 @@ class Users extends Api
 			return;
 		}
 
-		if ($validate = $this->validateLoginData($data["email"], $data["password"])) {
+		if ($validate = $this->validateLoginData($data["email"] ?? '', $data["password"] ?? '')) {
 			$this->call(
 				$validate['code'],
 				$validate['type'],
@@ -204,6 +204,15 @@ class Users extends Api
 
 		$data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
 
+		if (!filter_var($data['id'], FILTER_VALIDATE_INT)) {
+			$this->call(
+				422,
+				"unprocessable_entity",
+				'O ID do usuário deve ser um número inteiro'
+			)->back();
+			return;
+		}
+
 		if ($this->user->id != $data['id']) {
 			$this->call(
 				403,
@@ -213,7 +222,7 @@ class Users extends Api
 			return;
 		}
 
-		if ($validate = $this->validateLoginData($data["email"], $data["password"])) {
+		if ($validate = $this->validateLoginData($data["email"] ?? '', $data["password"] ?? '')) {
 			$this->call(
 				$validate['code'],
 				$validate['type'],
@@ -257,6 +266,15 @@ class Users extends Api
 
 		$data = filter_var_array($data, FILTER_SANITIZE_STRIPPED);
 
+		if (!filter_var($data['id'], FILTER_VALIDATE_INT)) {
+			$this->call(
+				422,
+				"unprocessable_entity",
+				'O ID do usuário deve ser um número inteiro'
+			)->back();
+			return;
+		}
+
 		if ($this->user->id != $data['id']) {
 			$this->call(
 				403,
@@ -287,7 +305,7 @@ class Users extends Api
 	 */
 	private function validateLoginData($email, $password): ?array
 	{
-		if (!is_email($email)) {
+		if ($email && !is_email($email)) {
 			return [
 				'code' => 422,
 				'type' => 'unprocessable_entity',
@@ -295,7 +313,7 @@ class Users extends Api
 			];
 		}
 
-		if (!is_passwd($password)) {
+		if ($password && !is_passwd($password)) {
 			return [
 				'code' => 422,
 				'type' => 'unprocessable_entity',
