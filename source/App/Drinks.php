@@ -174,6 +174,15 @@ class Drinks extends Api
 			return;
 		}
 
+		if(!isset($values['page']) || !filter_var($values['page'], FILTER_VALIDATE_INT)){
+			$this->call(
+				422,
+				"unprocessable_entity",
+				"O valor do header page deve ser um número inteiro"
+			)->back();
+			return;
+		}
+
 		$page = (!empty($values["page"]) ? $values["page"] : 1);
 		$pager = new Pager(url("/users/{$user->id}/drinks"));
 		$pager->pager($drinks->count(), CONF_PAGER_RESULTS, $page);
