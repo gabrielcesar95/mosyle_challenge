@@ -174,7 +174,7 @@ class Drinks extends Api
 			return;
 		}
 
-		if(!isset($values['page']) || !filter_var($values['page'], FILTER_VALIDATE_INT)){
+		if(isset($values['page']) && !filter_var($values['page'], FILTER_VALIDATE_INT)){
 			$this->call(
 				422,
 				"unprocessable_entity",
