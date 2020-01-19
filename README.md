@@ -15,8 +15,9 @@ API para registro de quantas vezes o usário bebeu água
 2. Edite o arquivo /source/boot/Config.php com as configurações necessárias
 3. Faça o download dos pacotes do composer:  
 ```composer update```  
-    **Ao baixar os repositórios pode ser solicitado o token oAuth para o repositório _gabrielcesar95/router_ no github. O token pode ser adquirido entrando em contato com Gabriel Cesar [por e-mail](mailto:95gabrielcesar@gmail.com)**
+    **Ao baixar os repositórios pode ser solicitado o token oAuth para o repositório _gabrielcesar95/router_ no github. O token pode ser adquirido entrando em contato com Gabriel Cesar por [e-mail](mailto:95gabrielcesar@gmail.com) (95gabrielcesar@gmail.com)**
 
-(Instruções de utilização substituídas por documentação OpenAPI, disponível no [SwaggerHub](https://app.swaggerhub.com/apis/gabrielcesar95/mosyle_challenge/1.0.0))
+#### Utilização
 
-[Collection no Postman (incompleto)](https://www.getpostman.com/collections/b77019a49b33fae680e1)
+Dados de uso e exemplos disponíveis no [SwaggerHub](https://app.swaggerhub.com/apis/gabrielcesar95/mosyle_challenge/1.0.0)  
+Esquemas de requisições disponíveis no [Postman](https://www.getpostman.com/collections/b77019a49b33fae680e1)
